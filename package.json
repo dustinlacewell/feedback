@@ -1,0 +1,64 @@
+{
+  "name": "@ldlework/feedback",
+  "version": "0.1.0",
+  "description": "Drop-in, drag-and-drop feedback overlay for React — sticky notes and arrows pinned to your live page, saved to a file.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Dustin Lacewell",
+  "homepage": "https://feedback.ldlework.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dustinlacewell/feedback.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dustinlacewell/feedback/issues"
+  },
+  "keywords": [
+    "react",
+    "feedback",
+    "annotation",
+    "sticky-notes",
+    "review",
+    "markup",
+    "overlay",
+    "comments"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "styles.css",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./styles.css"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsup": "^8",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@9.12.0"
+}
