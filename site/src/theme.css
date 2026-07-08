@@ -223,6 +223,71 @@ h3 {
   padding: clamp(64px, 12vw, 130px) 0 72px;
   text-align: center;
 }
+.s-hero .s-container {
+  position: relative;
+}
+
+/* Decorative "live note" pinned in the corner of the hero. */
+.s-heronote {
+  position: absolute;
+  top: -46px;
+  right: -8px;
+  width: 210px;
+  transform: rotate(-4deg);
+  text-align: left;
+  pointer-events: none;
+  z-index: 3;
+}
+.s-heronote__card {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-raised));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+.s-heronote__bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 11px;
+  background: var(--bg-code);
+  border-bottom: 1px solid var(--border-soft);
+}
+.s-heronote__grip {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-auto-rows: 3px;
+  gap: 3px;
+}
+.s-heronote__grip i {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--text-faint);
+}
+.s-heronote__body {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.s-heronote__body b {
+  color: var(--accent);
+}
+.s-heronote__arrow {
+  position: absolute;
+  top: 74px;
+  left: -96px;
+  width: 132px;
+  height: 111px;
+  overflow: visible;
+  color: var(--accent);
+}
+@media (max-width: 960px) {
+  .s-heronote {
+    display: none;
+  }
+}
 .s-hero h1 {
   font-size: clamp(40px, 8vw, 76px);
   font-weight: 700;

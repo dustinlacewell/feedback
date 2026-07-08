@@ -1,5 +1,6 @@
 import { Link } from '../router'
 import { CodeBlock } from '../components/CodeBlock'
+import { HeroNote } from '../components/HeroNote'
 import { BubbleIcon, DragIcon, TargetIcon, PaletteIcon, RouteIcon, LayersIcon, SaveIcon, ArrowRight } from '../components/icons'
 
 const FEATURES = [
@@ -28,6 +29,7 @@ export function Home() {
     <>
       <header className="s-hero">
         <div className="s-container">
+          <HeroNote />
           <span className="s-eyebrow">
             <BubbleIcon size={15} /> React · zero-dependency · MIT
           </span>
