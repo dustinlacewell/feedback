@@ -10,12 +10,20 @@
 
 import { EMPTY_DOC, normalizeDoc, type FeedbackDoc } from './document'
 
-export function readDoc(storageKey: string): FeedbackDoc {
-  if (typeof window === 'undefined') return EMPTY_DOC
+/**
+ * Restore the stored document, falling back to `seed` only when this key
+ * has never been written — the seam a pre-populated demo hangs on. A key
+ * that exists but is empty stays empty: a reader who cleared their notes
+ * shouldn't have the seed grow back on the next load.
+ */
+export function readDoc(storageKey: string, seed: FeedbackDoc = EMPTY_DOC): FeedbackDoc {
+  if (typeof window === 'undefined') return seed
+  const stored = window.localStorage.getItem(storageKey)
+  if (stored === null) return seed
   try {
-    return normalizeDoc(JSON.parse(window.localStorage.getItem(storageKey) ?? '{}'))
+    return normalizeDoc(JSON.parse(stored))
   } catch {
-    return EMPTY_DOC
+    return seed
   }
 }
 

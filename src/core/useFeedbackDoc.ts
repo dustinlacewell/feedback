@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { uid, type FeedbackDoc, type FeedbackEdge, type FeedbackNote } from './document'
+import { EMPTY_DOC, normalizeDoc, uid, type FeedbackDoc, type FeedbackEdge, type FeedbackNote } from './document'
 import { readDoc, writeDoc } from './persistence'
 
 type NotePatch = Partial<Pick<FeedbackNote, 'x' | 'y' | 'text' | 'resolved'>>
@@ -21,10 +21,13 @@ export interface FeedbackDocApi {
 /**
  * Holds the whole document in state and writes it back to `localStorage`
  * on any change — so a move, keystroke, resolve, arrow, or load is saved
- * the moment it happens.
+ * the moment it happens. `seed` populates the very first visit, before
+ * anything has been stored under `storageKey`.
  */
-export function useFeedbackDoc(storageKey: string): FeedbackDocApi {
-  const [doc, setDoc] = useState<FeedbackDoc>(() => readDoc(storageKey))
+export function useFeedbackDoc(storageKey: string, seed?: FeedbackDoc): FeedbackDocApi {
+  const [doc, setDoc] = useState<FeedbackDoc>(() =>
+    readDoc(storageKey, seed ? normalizeDoc(seed) : EMPTY_DOC),
+  )
 
   useEffect(() => {
     writeDoc(storageKey, doc)

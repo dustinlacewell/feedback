@@ -1,0 +1,29 @@
+{
+  "exportedAt": "2026-07-09T00:45:43.549Z",
+  "notes": [
+    {
+      "id": "f4c68b40-1bf6-41dd-9cfd-113af1a7465a",
+      "page": "/",
+      "section": null,
+      "x": 440.7867431640625,
+      "y": 406.8689270019531,
+      "text": "This is pretty good idea tbh",
+      "resolved": false
+    }
+  ],
+  "edges": [
+    {
+      "page": "/",
+      "section": null,
+      "noteId": "f4c68b40-1bf6-41dd-9cfd-113af1a7465a",
+      "port": "left",
+      "x": 322.7540283203125,
+      "y": 484.7376403808594,
+      "target": {
+        "selector": "div#root:nth-of-type(1) > header.s-hero > div.s-container",
+        "text": "Drop a note, point it at anything on the page — like this headline. React · zero-dependency · MITFeedback, right on the …"
+      },
+      "id": "f7e68d2b-ff6b-498a-a932-300ddd592431"
+    }
+  ]
+}
