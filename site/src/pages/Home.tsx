@@ -38,11 +38,8 @@ export function Home() {
     <>
       <header className="s-hero">
         <div className="s-container">
-          <span className="s-eyebrow">
-            <BubbleIcon size={15} /> React · zero-dependency · MIT
-          </span>
           <h1>
-            Feedback, right on <span className="s-accent">the page.</span>
+            Feedback right on <span className="s-accent">the page.</span>
           </h1>
           <p className="s-hero__tag">
             A drop-in overlay for React. Anyone can drop sticky notes and arrows on the live app, then send you the

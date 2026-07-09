@@ -1,13 +1,13 @@
 {
-  "exportedAt": "2026-07-09T00:45:43.549Z",
+  "exportedAt": "2026-07-09T03:59:51.969Z",
   "notes": [
     {
       "id": "f4c68b40-1bf6-41dd-9cfd-113af1a7465a",
       "page": "/",
       "section": null,
-      "x": 440.7867431640625,
-      "y": 406.8689270019531,
-      "text": "This is a pretty good idea tbh",
+      "x": -468.2294921875,
+      "y": 384.73785400390625,
+      "text": "This is pretty good idea tbh",
       "resolved": false
     }
   ],
@@ -16,14 +16,14 @@
       "page": "/",
       "section": null,
       "noteId": "f4c68b40-1bf6-41dd-9cfd-113af1a7465a",
-      "port": "left",
-      "x": 322.7540283203125,
-      "y": 484.7376403808594,
+      "port": "right",
+      "x": -130.52459716796875,
+      "y": 401.131103515625,
       "target": {
         "selector": "div#root:nth-of-type(1) > header.s-hero > div.s-container",
-        "text": "Drop a note, point it at anything on the page — like this headline. React · zero-dependency · MITFeedback, right on the …"
+        "text": "Feedback right on the page.A drop-in overlay for React. Anyone can drop sticky notes and arrows on the live app, then se…"
       },
-      "id": "f7e68d2b-ff6b-498a-a932-300ddd592431"
+      "id": "60dce8f6-4463-4dee-ae73-8783a8f5e272"
     }
   ]
 }
