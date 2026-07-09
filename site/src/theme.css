@@ -565,6 +565,7 @@ h3 {
 
 .s-code {
   position: relative;
+  margin: 0 0 20px;
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
   background: var(--bg-code);
