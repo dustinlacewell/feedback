@@ -1,6 +1,6 @@
 import { Link } from '../router'
 import { CodeBlock } from '../components/CodeBlock'
-import { BubbleIcon, ArrowRight } from '../components/icons'
+import { ArrowRight } from '../components/icons'
 import { InlineChip, InlineKnob, LoadGlyph, NoteGlyph, ReviewGlyph, SaveGlyph, SendGlyph } from '../components/demo/kit'
 import { NoteDemo } from '../components/demo/NoteDemo'
 import { DockDemo } from '../components/demo/DockDemo'
