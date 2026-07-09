@@ -33,7 +33,7 @@ jobs:
       - name: Build site
         run: pnpm --filter feedback-site build
 
-      # SPA fallback: serve the app shell for deep links (/integrate, /scroll).
+      # SPA fallback: serve the app shell for deep links (/docs/*).
       - name: Add 404 fallback
         run: cp site/dist/index.html site/dist/404.html
 
