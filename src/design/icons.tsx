@@ -33,6 +33,26 @@ export function LoadIcon() {
   )
 }
 
+/** Paper plane — "submit feedback to the collector". */
+export function SendIcon() {
+  return (
+    <Icon size={20}>
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </Icon>
+  )
+}
+
+/** Check in a circle — "the send went through". */
+export function SentIcon() {
+  return (
+    <Icon size={20}>
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </Icon>
+  )
+}
+
 /** Question mark in a circle — "how does this work?". */
 export function HelpIcon() {
   return (

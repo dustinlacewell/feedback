@@ -269,6 +269,14 @@
   background: var(--fb-accent);
   color: var(--fb-accent-contrast);
 }
+.fb-btn--solid.is-active.fb-btn--success {
+  border-color: var(--fb-success);
+  background: var(--fb-success);
+}
+.fb-btn--solid.is-active.fb-btn--danger {
+  border-color: var(--fb-danger);
+  background: var(--fb-danger);
+}
 
 .fb-btn-wrap {
   position: relative;
@@ -311,6 +319,16 @@
 }
 .fb-dock__launcher:active {
   cursor: grabbing;
+}
+
+/* The send button breathes while its request is in flight. */
+.fb-dock__send.is-sending svg {
+  animation: fb-send-pulse 0.9s ease-in-out infinite;
+}
+@keyframes fb-send-pulse {
+  50% {
+    opacity: 0.3;
+  }
 }
 
 /* ---------------------------------------------------------------- toolbar */

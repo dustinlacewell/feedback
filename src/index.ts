@@ -17,11 +17,14 @@ export type { FeedbackProviderProps } from './core/context'
 
 export { FeedbackLayer } from './ontology/FeedbackLayer'
 
-export { useFeedbackSurface } from './core/useFeedbackSurface'
-export type { FeedbackSurfaceOptions } from './core/useFeedbackSurface'
+export { FeedbackRegion } from './core/FeedbackRegion'
+export type { FeedbackRegionProps } from './core/FeedbackRegion'
 
 export type { FeedbackNavigation } from './core/navigation'
-export type { AnchorX, Surface } from './core/coordinates'
+export type { AnchorX, Region } from './core/coordinates'
+
+export { endpointSubmitter } from './core/submission'
+export type { FeedbackSubmitter, EndpointOptions } from './core/submission'
 
 export { normalizeDoc, EMPTY_DOC } from './core/document'
 export type { FeedbackNote, FeedbackEdge, FeedbackDoc, EdgeTarget } from './core/document'

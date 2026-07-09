@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { toContent, type Surface } from '../core/coordinates'
+import { toContent, type Region } from '../core/coordinates'
 import { describeTarget } from '../core/targetAddress'
 import { knobPoint, type Point, type Port } from '../core/geometry'
 import type { EdgeTarget, FeedbackNote } from '../core/document'
@@ -23,7 +23,7 @@ export interface EdgeDraftApi {
 }
 
 interface EdgeDraftDeps {
-  surface: Surface
+  region: Region
   noteById: (id: string) => FeedbackNote | undefined
   heightOf: (id: string) => number
   onCommit: (noteId: string, port: Port, head: Point, target: EdgeTarget | null) => void
@@ -34,7 +34,7 @@ interface EdgeDraftDeps {
  * commits a real arrow on release, unless the drag was too short. A ref
  * mirrors the draft so the pointer-up handler never reads a stale head.
  */
-export function useEdgeDraft({ surface, noteById, heightOf, onCommit }: EdgeDraftDeps): EdgeDraftApi {
+export function useEdgeDraft({ region, noteById, heightOf, onCommit }: EdgeDraftDeps): EdgeDraftApi {
   const [draft, setDraft] = useState<EdgeDraft | null>(null)
   const live = useRef<EdgeDraft | null>(null)
 
@@ -50,14 +50,14 @@ export function useEdgeDraft({ surface, noteById, heightOf, onCommit }: EdgeDraf
 
   const move = (clientX: number, clientY: number) => {
     const d = live.current
-    if (d) set({ ...d, head: toContent(clientX, clientY, surface) })
+    if (d) set({ ...d, head: toContent(clientX, clientY, region) })
   }
 
   const end = (clientX: number, clientY: number) => {
     const d = live.current
     const note = d && noteById(d.noteId)
     if (d && note) {
-      const head = toContent(clientX, clientY, surface)
+      const head = toContent(clientX, clientY, region)
       const tail = knobPoint(note, d.port, heightOf(d.noteId))
       if (Math.hypot(head.x - tail.x, head.y - tail.y) > MIN_DRAG) {
         onCommit(d.noteId, d.port, head, describeTarget(clientX, clientY))

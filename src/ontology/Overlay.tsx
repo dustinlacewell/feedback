@@ -23,13 +23,13 @@ interface OverlayProps {
 }
 
 /**
- * The draw layer: every note, knob, and arrow for the active surface,
- * portalled into that surface so they scroll and clip with its content.
+ * The draw layer: every note, knob, and arrow for the active region,
+ * portalled into that region so they scroll and clip with its content.
  * Positions come in origin-relative and are lifted by `originX` here — the
  * one place the anchor line meets the screen.
  */
 export function Overlay({ originX, focusId, reviewCurrentId, reviewing, selectedEdge, onSelectEdge, draft }: OverlayProps) {
-  const { doc, surface, section, nav, heightOf, rootClassName, rootStyle } = useFeedback()
+  const { doc, region, section, nav, heightOf, rootClassName, rootStyle } = useFeedback()
 
   const inScope = (o: { page: string; section: string | null }) =>
     o.page === nav.page && (o.section ?? null) === (section ?? null)
@@ -87,6 +87,6 @@ export function Overlay({ originX, focusId, reviewCurrentId, reviewing, selected
         />
       ))}
     </div>,
-    surface.element ?? document.body,
+    region.element ?? document.body,
   )
 }

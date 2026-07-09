@@ -1,13 +1,17 @@
 import type { Ref } from 'react'
 import type { PointerDragHandlers } from '../../hooks/usePointerDrag'
+import type { SubmissionStatus } from '../../hooks/useSubmission'
 import { IconButton } from '../../design/IconButton'
-import { NoteIcon, SaveIcon, LoadIcon, ReviewIcon, HelpIcon } from '../../design/icons'
+import { NoteIcon, SaveIcon, LoadIcon, SendIcon, SentIcon, ReviewIcon, HelpIcon } from '../../design/icons'
 
 interface FeedbackDockProps {
   /** Pointer handlers for the drag-to-create gesture. */
   launcher: PointerDragHandlers
   onSave: () => void
   onLoad: () => void
+  /** Null when the provider has no `submit` target — the button stays hidden. */
+  onSubmit: (() => void) | null
+  submitStatus: SubmissionStatus
   onToggleReview: () => void
   reviewing: boolean
   onToggleHelp: () => void
@@ -17,8 +21,15 @@ interface FeedbackDockProps {
   count: number
 }
 
-/** The persistent corner: help, create, save, load, and enter review. */
-export function FeedbackDock({ launcher, onSave, onLoad, onToggleReview, reviewing, onToggleHelp, helpOpen, helpRef, count }: FeedbackDockProps) {
+const SUBMIT_TITLES: Record<SubmissionStatus, string> = {
+  idle: 'Send all feedback notes',
+  sending: 'Sending feedback…',
+  sent: 'Feedback sent',
+  error: 'Sending failed — try again',
+}
+
+/** The persistent corner: help, create, send, save, load, and enter review. */
+export function FeedbackDock({ launcher, onSave, onLoad, onSubmit, submitStatus, onToggleReview, reviewing, onToggleHelp, helpOpen, helpRef, count }: FeedbackDockProps) {
   return (
     <div className="fb-dock">
       <IconButton
@@ -43,6 +54,21 @@ export function FeedbackDock({ launcher, onSave, onLoad, onToggleReview, reviewi
       >
         <NoteIcon />
       </IconButton>
+
+      {onSubmit && (
+        <IconButton
+          variant="solid"
+          size="lg"
+          tone={submitStatus === 'error' ? 'danger' : 'success'}
+          active={submitStatus === 'sent' || submitStatus === 'error'}
+          onClick={onSubmit}
+          disabled={count === 0 || submitStatus === 'sending'}
+          className={submitStatus === 'sending' ? 'fb-dock__send is-sending' : 'fb-dock__send'}
+          title={SUBMIT_TITLES[submitStatus]}
+        >
+          {submitStatus === 'sent' ? <SentIcon /> : <SendIcon />}
+        </IconButton>
+      )}
 
       <IconButton variant="solid" size="lg" onClick={onSave} disabled={count === 0} title="Save all feedback notes to a file">
         <SaveIcon />

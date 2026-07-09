@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Popover } from '../../design/Popover'
 import { useFeedback } from '../../core/context'
-import { NoteIcon, SaveIcon, GripIcon, CloseIcon } from '../../design/icons'
+import { NoteIcon, SaveIcon, SendIcon, GripIcon, CloseIcon } from '../../design/icons'
 
 interface HelpGuideProps {
   /** The button the guide springs from. */
@@ -15,7 +15,7 @@ interface HelpGuideProps {
  * follows it onto the portal.
  */
 export function HelpGuide({ anchor, onClose }: HelpGuideProps) {
-  const { rootClassName, rootStyle } = useFeedback()
+  const { submit, rootClassName, rootStyle } = useFeedback()
   return (
     <Popover anchor={anchor} onClose={onClose} label="How feedback works" className={rootClassName} style={rootStyle}>
       <header className="fb-guide__header">
@@ -43,12 +43,23 @@ export function HelpGuide({ anchor, onClose }: HelpGuideProps) {
           <b>Point at it.</b> Drag from a knob on a note's edge to draw an arrow at exactly what you mean. Drag the
           arrowhead to fine-tune, or select it and press Delete.
         </Step>
-        <Step icon={<SaveIcon />}>
+        <Step icon={submit ? <SendIcon /> : <SaveIcon />}>
           <b>Send it in.</b> Notes save in your browser as you go. When you're done, hit{' '}
-          <InlineIcon>
-            <SaveIcon />
-          </InlineIcon>{' '}
-          to download them as a file and send it along.
+          {submit ? (
+            <>
+              <InlineIcon>
+                <SendIcon />
+              </InlineIcon>{' '}
+              to submit them.
+            </>
+          ) : (
+            <>
+              <InlineIcon>
+                <SaveIcon />
+              </InlineIcon>{' '}
+              to download them as a file and send it along.
+            </>
+          )}
         </Step>
       </ul>
     </Popover>

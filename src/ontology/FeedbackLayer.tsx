@@ -4,6 +4,7 @@ import { useFeedback } from '../core/context'
 import { toContent, useOriginX } from '../core/coordinates'
 import { importDoc, exportDoc } from '../core/persistence'
 import { useReview } from '../hooks/useReview'
+import { useSubmission } from '../hooks/useSubmission'
 import { useEdgeDraft } from '../hooks/useEdgeDraft'
 import { useSpawnGesture } from '../hooks/useSpawnGesture'
 import { Overlay } from './Overlay'
@@ -13,15 +14,15 @@ import { ReviewBar } from './review/ReviewBar'
 import { HelpGuide } from './help/HelpGuide'
 
 /**
- * The always-on feedback surface. Mount it once inside a
+ * The always-on feedback layer. Mount it once inside a
  * `<FeedbackProvider>` and it draws itself: the overlay of notes and
- * arrows portals into the active surface; the dock, review bar, and help
+ * arrows portals into the active region; the dock, review bar, and help
  * pin to the viewport. Wiring only — every behaviour lives in its own
  * delegate.
  */
 export function FeedbackLayer() {
-  const { doc, nav, surface, section, heightOf, fileName, rootClassName, rootStyle } = useFeedback()
-  const originX = useOriginX(surface)
+  const { doc, nav, region, section, heightOf, fileName, submit, rootClassName, rootStyle } = useFeedback()
+  const originX = useOriginX(region)
   const review = useReview(doc.notes)
   const [focusId, setFocusId] = useState<string | null>(null)
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null)
@@ -31,7 +32,7 @@ export function FeedbackLayer() {
   const noteById = useCallback((id: string) => doc.notes.find((n) => n.id === id), [doc.notes])
 
   const draft = useEdgeDraft({
-    surface,
+    region,
     noteById,
     heightOf,
     onCommit: (noteId, port, head, target) =>
@@ -40,10 +41,10 @@ export function FeedbackLayer() {
 
   const spawn = useCallback(
     (clientX: number, clientY: number) => {
-      const { x, y } = toContent(clientX, clientY, surface)
+      const { x, y } = toContent(clientX, clientY, region)
       setFocusId(doc.addNote(nav.page, section, x, Math.max(0, y)))
     },
-    [doc, nav.page, section, surface],
+    [doc, nav.page, section, region],
   )
   const { ghost, handlers } = useSpawnGesture(spawn)
 
@@ -53,6 +54,12 @@ export function FeedbackLayer() {
   }, [doc])
 
   const save = useCallback(() => void exportDoc({ notes: doc.notes, edges: doc.edges }, fileName), [doc, fileName])
+
+  const submission = useSubmission(submit)
+  const send = useCallback(
+    () => void submission.send({ notes: doc.notes, edges: doc.edges }),
+    [submission.send, doc.notes, doc.edges],
+  )
 
   // Clicking anywhere but an arrow (arrows stop propagation) deselects it.
   useEffect(() => {
@@ -115,6 +122,8 @@ export function FeedbackLayer() {
             launcher={handlers}
             onSave={save}
             onLoad={() => void load()}
+            onSubmit={submit ? send : null}
+            submitStatus={submission.status}
             onToggleReview={review.toggle}
             reviewing={review.on}
             onToggleHelp={() => setHelpOpen((open) => !open)}

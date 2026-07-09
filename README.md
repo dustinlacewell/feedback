@@ -11,7 +11,7 @@ Reviewers drop sticky notes onto the running app, draw arrows at exactly what th
 [![types](https://img.shields.io/npm/types/@ldlework/feedback?color=%23e6a817)](https://www.npmjs.com/package/@ldlework/feedback)
 ![react](https://img.shields.io/badge/React-18%20%7C%2019-%23e6a817)
 
-**[Live demo](https://feedback.ldlework.com)** · **[Integration guide](https://feedback.ldlework.com/integrate)** · **[npm](https://www.npmjs.com/package/@ldlework/feedback)**
+**[Live demo](https://feedback.ldlework.com)** · **[Docs](https://feedback.ldlework.com/docs)** · **[npm](https://www.npmjs.com/package/@ldlework/feedback)**
 
 </div>
 
@@ -21,10 +21,11 @@ Reviewers drop sticky notes onto the running app, draw arrows at exactly what th
 
 - 🎯 **Drag to annotate** — drop notes anywhere, draw arrows from a note's edge straight at what you mean.
 - 📐 **Pinned to content** — positions are stored in *content coordinates*, so notes stay glued to your layout across every window size.
-- 🧱 **Inner scroll surfaces** — attach notes to a scrollable panel so they scroll and clip with its content, not just the window.
+- 🧱 **Inner scroll panes** — wrap a pane's content in a region so notes scroll and clip with it, not just the window.
 - 🧭 **Review mode** — step through every note; it routes to the right page and section and scrolls it into view.
 - 🎨 **Themeable** — one stylesheet, every colour a CSS variable; re-skin it all from a single `--fb-hue`.
 - 💾 **Save to a file** — export/import one JSON document; nothing leaves the browser unless you send it.
+- 📮 **Submit to a server** — point `submit` at an endpoint (or hand it a function) and the dock grows a send button.
 - 🪶 **Zero runtime dependencies** — ships ESM + types, router-agnostic, no CSS framework required.
 
 ## Install
@@ -60,19 +61,17 @@ export function App() {
 
 ## Inner scroll & sections
 
-When your content scrolls inside a panel rather than the window, bind that element as a **surface** with `useFeedbackSurface`. Notes then live inside it — scrolling and clipping with its content. Give the element `position: relative` so it forms a containing block.
+When your content scrolls inside a panel rather than the window, wrap that content in a `<FeedbackRegion>` — inside whatever scroll container you already have. Notes then live in the region: they ride along with the scroll and clip with the pane.
 
 ```tsx
-import { useRef } from 'react'
-import { useFeedbackSurface } from '@ldlework/feedback'
+import { FeedbackRegion } from '@ldlework/feedback'
 
 function DocumentPane() {
-  const ref = useRef<HTMLDivElement>(null)
-  useFeedbackSurface({ ref, anchorX: 'left' })
-
   return (
-    <div ref={ref} style={{ position: 'relative', overflow: 'auto', height: '100vh' }}>
-      {/* content */}
+    <div style={{ overflow: 'auto', height: '100vh' }}>
+      <FeedbackRegion anchorX="left">
+        {/* content */}
+      </FeedbackRegion>
     </div>
   )
 }
@@ -81,11 +80,35 @@ function DocumentPane() {
 A `section` is an optional sub-scope of a page — notes tagged with one only show while that section is active, so a carousel step or tab doesn't leak its notes onto its siblings. Provide `onReveal` so review can switch to a section before it scrolls to a note:
 
 ```tsx
-useFeedbackSurface({
-  section: currentStepId,
-  onReveal: (stepId) => goToStep(stepId),
-})
+<FeedbackRegion section={currentStepId} onReveal={(stepId) => goToStep(stepId)}>
+  {steps[currentStepId]}
+</FeedbackRegion>
 ```
+
+## Submitting to a server
+
+By default feedback leaves the browser only as a downloaded file. Give the provider a `submit` target and the dock adds a send button that delivers the document over the network instead — the button reports sending, sent, and failure states, and file export stays available alongside it.
+
+An endpoint URL is the whole integration — the document is POSTed there as JSON with a `submittedAt` timestamp:
+
+```tsx
+<FeedbackProvider submit="https://api.example.com/feedback">
+```
+
+Need auth headers or a different method? Build the submitter with `endpointSubmitter`:
+
+```tsx
+import { endpointSubmitter } from '@ldlework/feedback'
+
+<FeedbackProvider
+  submit={endpointSubmitter('https://api.example.com/feedback', {
+    headers: { Authorization: `Bearer ${token}` },
+    credentials: 'include',
+  })}
+>
+```
+
+Or supply any `(doc: FeedbackDoc) => Promise<void>` for full control — an SDK call, a queue, whatever. Throw (or reject) to signal failure; the dock shows the error state and the reviewer can retry.
 
 ## The coordinate model
 
@@ -95,7 +118,7 @@ A note remembers where it belongs in the **content**, not on the screen. Its `y`
 - **`center`** *(default)* — x signed from the horizontal centre line, so a note dropped on a centred column stays glued to it as the window narrows.
 - **`right`** — x from the content's right edge.
 
-Because positions are stored this way, they survive a resize the way the content itself does. A **surface** is the region those coordinates live in — the document/viewport by default, or an inner scroll container you opt into.
+Because positions are stored this way, they survive a resize the way the content itself does. A **region** is the element those coordinates live in — the document/viewport by default, or the content you wrapped in a `<FeedbackRegion>`.
 
 ## Router integration
 
@@ -150,22 +173,23 @@ Key tokens: `--fb-hue`, `--fb-accent`, `--fb-accent-hover`, `--fb-accent-contras
 | `storageKey` | `string` | `"feedback"` — localStorage key the document is saved under. |
 | `fileName` | `string` | `"feedback.json"` — suggested name for exported files. |
 | `navigation` | `FeedbackNavigation` | History-API adapter — `{ page, navigate }` for router integration. |
-| `defaultAnchorX` | `AnchorX` | `"center"` — x anchoring for pages that bind no surface. |
+| `submit` | `string \| FeedbackSubmitter` | Unset — an endpoint URL (document POSTed as JSON) or a custom async submitter; adds a send button to the dock. |
+| `defaultAnchorX` | `AnchorX` | `"center"` — x anchoring for pages that mount no region. |
 | `className` | `string` | Extra class on every portal root — e.g. a theme scope. |
 | `style` | `CSSProperties` | CSS-variable overrides applied to every portal root. |
 
-### `useFeedbackSurface(options)`
+### `<FeedbackRegion>`
 
-| Option | Type | Description |
+| Prop | Type | Description |
 | --- | --- | --- |
-| `ref` | `RefObject<HTMLElement \| null>` | Scroll container notes live in. Omit for a window-scrolled page. |
-| `anchorX` | `'left' \| 'center' \| 'right'` | How x is anchored within this surface. |
+| `anchorX` | `'left' \| 'center' \| 'right'` | How x is anchored within this region. |
 | `section` | `string \| null` | A sub-scope so notes on one view don't leak onto siblings. |
 | `onReveal` | `(section: string) => void` | How review reveals a section before scrolling to a note. |
+| `className`, `style` | | Applied to the wrapper element (`position` is reserved). |
 
 ### Also exported
 
-`FeedbackLayer` (the overlay, no props) · types `FeedbackProviderProps`, `FeedbackSurfaceOptions`, `FeedbackNavigation`, `AnchorX`, `Surface`, `FeedbackNote`, `FeedbackEdge`, `FeedbackDoc`, `EdgeTarget`, `Port` · helpers `normalizeDoc(json)` and `EMPTY_DOC` for reading an untrusted file back into a document.
+`FeedbackLayer` (the overlay, no props) · types `FeedbackProviderProps`, `FeedbackRegionProps`, `FeedbackNavigation`, `FeedbackSubmitter`, `EndpointOptions`, `AnchorX`, `Region`, `FeedbackNote`, `FeedbackEdge`, `FeedbackDoc`, `EdgeTarget`, `Port` · helpers `endpointSubmitter(url, options)`, `normalizeDoc(json)`, and `EMPTY_DOC` for reading an untrusted file back into a document.
 
 ## File format
 
