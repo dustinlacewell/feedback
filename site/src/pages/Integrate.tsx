@@ -98,7 +98,7 @@ export function Integrate() {
 
         <h2 id="install">Install</h2>
         <p>Install the package and import its stylesheet once, anywhere in your app.</p>
-        <CodeBlock code={INSTALL} file="terminal" />
+        <CodeBlock code={INSTALL} file="terminal" lang="bash" />
         <p>
           <code>react</code> and <code>react-dom</code> (v18 or v19) are peer dependencies. The library ships ESM and
           TypeScript types, and pulls in no runtime dependencies of its own.
@@ -166,9 +166,9 @@ export function Integrate() {
           <code>--fb-*</code> custom property scoped to <code>.fb-root</code>, so nothing leaks in or out. Re-skin the
           whole thing from one knob:
         </p>
-        <CodeBlock code={THEME_HUE} file="theme.css" />
+        <CodeBlock code={THEME_HUE} file="theme.css" lang="css" />
         <p>Or override any individual token:</p>
-        <CodeBlock code={THEME_TOKENS} file="theme.css" />
+        <CodeBlock code={THEME_TOKENS} file="theme.css" lang="css" />
         <p>
           You can also scope a theme to one provider — the <code>className</code> and <code>style</code> props are
           applied to every portal root, including the ones the overlay teleports to.
@@ -312,7 +312,7 @@ export function Integrate() {
           carries a <code>target</code> — a CSS path and a text excerpt of the element it points at — so whoever reads
           the file can find it without the picture.
         </p>
-        <CodeBlock code={FILE} file="acme-feedback.json" />
+        <CodeBlock code={FILE} file="acme-feedback.json" lang="json" />
         <p>
           Run a file back through <code>normalizeDoc()</code> to validate it, then hand the result to your own tooling
           — or just re-load it into the overlay with the dock's load button and enter review.

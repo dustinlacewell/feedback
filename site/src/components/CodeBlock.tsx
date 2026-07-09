@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import { highlight, type Lang } from './highlight'
 
 interface CodeBlockProps {
   code: string
   file?: string
+  lang?: Lang
 }
 
 /** A code window with a title bar and a copy button. Plain text, no runtime highlighter. */
-export function CodeBlock({ code, file }: CodeBlockProps) {
+export function CodeBlock({ code, file, lang = 'tsx' }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
 
   const copy = async () => {
@@ -31,7 +33,7 @@ export function CodeBlock({ code, file }: CodeBlockProps) {
         </button>
       </div>
       <pre>
-        <code>{code}</code>
+        <code>{highlight(code, lang)}</code>
       </pre>
     </div>
   )

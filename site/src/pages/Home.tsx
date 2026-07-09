@@ -49,27 +49,10 @@ export function Home() {
             </a>
           </div>
           <p className="s-hero__hint">
-            ↘ This overlay is live on this page. <b>Drag the note button in the bottom-right corner up here and let go.</b>
+            ↘ <b>Drag the note button in the bottom-right corner up here and let go.</b>
           </p>
         </div>
       </header>
-
-      <section className="s-section--tight">
-        <div className="s-container">
-          <div className="s-callout">
-            <span className="s-callout__icon">
-              <TargetIcon />
-            </span>
-            <div>
-              <p>
-                <b>Try it now.</b> Everything below is real. Drop a note, drag its top bar to move it, and drag from a
-                knob on its edge to draw an arrow at any word on this page.
-              </p>
-              <p>Hit the review button in the dock to step back through what you left. Your notes are saved locally.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="s-section">
         <div className="s-container">
@@ -81,8 +64,10 @@ export function Home() {
           <div className="s-grid">
             {FEATURES.map((f) => (
               <article key={f.title} className="s-card">
-                <span className="s-card__icon">{f.icon}</span>
-                <h3>{f.title}</h3>
+                <div className="s-card__head">
+                  <span className="s-card__icon">{f.icon}</span>
+                  <h3>{f.title}</h3>
+                </div>
                 <p>{f.body}</p>
               </article>
             ))}
