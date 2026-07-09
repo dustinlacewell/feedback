@@ -1,16 +1,25 @@
 import { Link } from '../router'
 import { CodeBlock } from '../components/CodeBlock'
-import { HeroNote } from '../components/HeroNote'
-import { BubbleIcon, DragIcon, TargetIcon, PaletteIcon, RouteIcon, LayersIcon, SaveIcon, ArrowRight } from '../components/icons'
+import { BubbleIcon, ArrowRight } from '../components/icons'
+import { InlineChip, InlineKnob, LoadGlyph, NoteGlyph, ReviewGlyph, SaveGlyph, SendGlyph } from '../components/demo/kit'
+import { NoteDemo } from '../components/demo/NoteDemo'
+import { DockDemo } from '../components/demo/DockDemo'
+import { ReviewDemo } from '../components/demo/ReviewDemo'
 
-const FEATURES = [
-  { icon: <DragIcon />, title: 'Drag to annotate', body: 'Drag the note button onto the page and drop it where it matters. Draw arrows from a note straight at what you mean.' },
-  { icon: <TargetIcon />, title: 'Pinned to content', body: 'Notes store content coordinates, not screen pixels, so they stay glued to your layout across every window size.' },
-  { icon: <LayersIcon />, title: 'Inner scroll surfaces', body: 'Attach notes to a scrollable panel so they scroll and clip with its content — not just the window.' },
-  { icon: <RouteIcon />, title: 'Review mode', body: 'Step through every note; it routes to the right page and section and scrolls the note into view. Resolve as you go.' },
-  { icon: <PaletteIcon />, title: 'Themeable', body: 'One stylesheet, every colour a CSS variable. Re-skin the whole overlay by setting a single --fb-hue.' },
-  { icon: <SaveIcon />, title: 'Save to a file', body: 'Notes persist in the browser as you work, and export to one JSON file to hand back — arrows carry a CSS path to their target.' },
-]
+const FEEDBACK_FILE = `{
+  "exportedAt": "2026-07-08T12:00:00Z",
+  "notes": [
+    { "page": "/pricing", "x": -120, "y": 480,
+      "text": "This CTA is unclear", "resolved": false }
+  ],
+  "edges": [
+    { "port": "right", "x": 40, "y": 500,
+      "target": {
+        "selector": "section.hero > button.cta",
+        "text": "Start free"
+      } }
+  ]
+}`
 
 const QUICK_START = `import { FeedbackProvider, FeedbackLayer } from '@ldlework/feedback'
 import '@ldlework/feedback/styles.css'
@@ -29,7 +38,6 @@ export function Home() {
     <>
       <header className="s-hero">
         <div className="s-container">
-          <HeroNote />
           <span className="s-eyebrow">
             <BubbleIcon size={15} /> React · zero-dependency · MIT
           </span>
@@ -37,48 +45,107 @@ export function Home() {
             Feedback, right on <span className="s-accent">the page.</span>
           </h1>
           <p className="s-hero__tag">
-            A drop-in overlay that lets anyone drag sticky notes onto your live React app, point arrows at exactly
-            what they mean, and send it all back as one file.
+            A drop-in overlay for React. Anyone can drop sticky notes and arrows on the live app, then send you the
+            file.
           </p>
           <div className="s-hero__cta">
-            <Link to="/integrate" className="s-btn s-btn--primary">
+            <Link to="/docs" className="s-btn s-btn--primary">
               Get started <ArrowRight />
             </Link>
             <a className="s-btn s-btn--ghost" href="https://github.com/dustinlacewell/feedback" target="_blank" rel="noreferrer">
               View on GitHub
             </a>
           </div>
-          <p className="s-hero__hint">
-            ↘ <b>Drag the note button in the bottom-right corner up here and let go.</b>
-          </p>
         </div>
       </header>
 
       <section className="s-section">
         <div className="s-container">
-          <div className="s-section__head">
-            <span className="s-eyebrow">What you get</span>
-            <h2>A whole review workflow, in one component.</h2>
-            <p>Mount it once. It draws the dock, the notes, the arrows, and the review stepper — and gets out of the way.</p>
+          <div className="s-tour">
+            <div className="s-tour__copy">
+              <span className="s-eyebrow">01 · The dock</span>
+              <h2>Drag to drop feedback.</h2>
+              <p>
+                Drag the{' '}
+                <InlineChip>
+                  <NoteGlyph />
+                </InlineChip>{' '}
+                off the dock and let go — a note lands where you drop it, ready to type. The badge counts notes
+                across the app.
+              </p>
+              <p>Works right here, and on the live dock in the corner.</p>
+            </div>
+            <DockDemo />
           </div>
-          <div className="s-grid">
-            {FEATURES.map((f) => (
-              <article key={f.title} className="s-card">
-                <div className="s-card__head">
-                  <span className="s-card__icon">{f.icon}</span>
-                  <h3>{f.title}</h3>
-                </div>
-                <p>{f.body}</p>
-              </article>
-            ))}
+
+          <div className="s-tour s-tour--flip">
+            <div className="s-tour__copy">
+              <span className="s-eyebrow">02 · Notes</span>
+              <h2>Drop a note, point an arrow.</h2>
+              <p>
+                Feedback is a sticky note on the page itself. Drag it by the grip, type in it, check it off when
+                handled.
+              </p>
+              <p>
+                Arrows come from the <InlineKnob /> knobs on its edge. Each records a CSS selector and a text excerpt
+                of what it points at.
+              </p>
+              <p>Try it — move the note, pull an arrow from a knob.</p>
+            </div>
+            <NoteDemo />
           </div>
+
+          <div className="s-tour">
+            <div className="s-tour__copy">
+              <span className="s-eyebrow">03 · Save &amp; load</span>
+              <h2>Download when you're done.</h2>
+              <p>Notes autosave to your browser — close the tab, they'll be there tomorrow. Nothing is uploaded.</p>
+              <p>
+                Finished?{' '}
+                <InlineChip>
+                  <SaveGlyph />
+                </InlineChip>{' '}
+                downloads one JSON file to send along.{' '}
+                <InlineChip>
+                  <LoadGlyph />
+                </InlineChip>{' '}
+                puts a received file back on the page.
+              </p>
+              <p>
+                Or skip the file: point the provider's <code>submit</code> prop at an endpoint and the dock grows a{' '}
+                <InlineChip>
+                  <SendGlyph />
+                </InlineChip>{' '}
+                button that posts the document straight to your server.
+              </p>
+            </div>
+            <CodeBlock code={FEEDBACK_FILE} file="feedback.json" lang="json" />
+          </div>
+
+          <div className="s-tour s-tour--flip">
+            <div className="s-tour__copy">
+              <span className="s-eyebrow">04 · Review</span>
+              <h2>Review what comes back.</h2>
+              <p>
+                Load the file, hit{' '}
+                <InlineChip>
+                  <ReviewGlyph />
+                </InlineChip>
+                . The bar steps note by note — switching pages, scrolling each into view.
+              </p>
+              <p>Resolve or delete as you go; the eye re-includes resolved notes.</p>
+              <p>This one works.</p>
+            </div>
+            <ReviewDemo />
+          </div>
+
         </div>
       </section>
 
       <section className="s-section" style={{ paddingTop: 0 }}>
         <div className="s-container s-narrow">
           <div className="s-section__head">
-            <span className="s-eyebrow">Two lines and a stylesheet</span>
+            <span className="s-eyebrow">05 · Install</span>
             <h2>Add it to your app.</h2>
             <p>
               Wrap your tree in a provider and drop the layer in. That's the whole install for a window-scrolled page.
@@ -86,11 +153,11 @@ export function Home() {
           </div>
           <CodeBlock code={QUICK_START} file="App.tsx" />
           <div style={{ marginTop: 28, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <Link to="/integrate" className="s-btn s-btn--primary">
-              Read the integration guide <ArrowRight />
+            <Link to="/docs" className="s-btn s-btn--primary">
+              Read the docs <ArrowRight />
             </Link>
-            <Link to="/scroll" className="s-btn s-btn--ghost">
-              See the scroll-surface demo
+            <Link to="/docs/api" className="s-btn s-btn--ghost">
+              API reference
             </Link>
           </div>
         </div>

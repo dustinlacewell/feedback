@@ -3,8 +3,7 @@ import { BubbleIcon, GitHubIcon } from './icons'
 
 const LINKS = [
   { to: '/', label: 'Home' },
-  { to: '/scroll', label: 'Scroll surface' },
-  { to: '/integrate', label: 'Integrate' },
+  { to: '/docs', label: 'Docs' },
 ]
 
 export function Nav() {
